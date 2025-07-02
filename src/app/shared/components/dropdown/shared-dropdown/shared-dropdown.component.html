@@ -1,0 +1,9 @@
+<p-dropdown
+  [options]="options"
+  [optionLabel]="optionLabel"
+  [optionValue]="optionValue"
+  [placeholder]="placeholder"
+  [disabled]="disabled"
+  [(ngModel)]="model"
+  (onChange)="modelChange.emit($event.value)"
+></p-dropdown>

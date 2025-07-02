@@ -1,0 +1,8 @@
+<input
+  pInputText
+  [type]="type"
+  [placeholder]="placeholder"
+  [disabled]="disabled"
+  [(ngModel)]="model"
+  (ngModelChange)="modelChange.emit($event)"
+/>
