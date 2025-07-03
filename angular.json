@@ -29,7 +29,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["node_modules/primeicons/primeicons.css", "src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -83,7 +83,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["node_modules/primeicons/primeicons.css", "src/styles.scss"],
             "scripts": []
           }
         },
@@ -98,8 +98,7 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "rick-and-morty-dashboard:build",
-            "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodoc": false,
             "port": 6006
           }
         },
@@ -108,8 +107,7 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "rick-and-morty-dashboard:build",
-            "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "."],
+            "compodoc": false,
             "outputDir": "storybook-static"
           }
         }
