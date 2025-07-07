@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { CharactersState, adapter } from '..';
+import { adapter } from '..';
 import { Character } from '../../../shared/models/character.model';
+import { CharactersState } from '../states/characters.state';
 
 export const selectCharactersState = createFeatureSelector<CharactersState>('characters');
 
@@ -46,4 +47,9 @@ export const selectCharacterDetailsLoading = createSelector(
 export const selectCharacterDetailsError = createSelector(
   selectCharactersState,
   (state) => state.characterDetailsError,
+);
+
+export const selectEpisodesCache = createSelector(
+  selectCharactersState,
+  (state) => state.episodesCache,
 );

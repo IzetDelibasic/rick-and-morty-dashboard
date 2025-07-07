@@ -1,39 +1,10 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Character, Episode } from '../../../shared/models/character.model';
+import { Character } from '../../../shared/models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
-
-export interface CharactersState extends EntityState<Character> {
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  nextPageUrl: string | null;
-  prevPageUrl: string | null;
-  loading: boolean;
-  error: any;
-  pagesCache: { [page: number]: number[] };
-  selectedCharacter: Character | null;
-  selectedCharacterEpisodes: Episode[];
-  characterDetailsLoading: boolean;
-  characterDetailsError: any;
-}
+import { initialState } from '../states/characters.state';
 
 export const adapter: EntityAdapter<Character> = createEntityAdapter<Character>();
-
-export const initialState: CharactersState = adapter.getInitialState({
-  currentPage: 1,
-  totalPages: 0,
-  totalCount: 0,
-  nextPageUrl: null,
-  prevPageUrl: null,
-  loading: false,
-  error: null,
-  pagesCache: {},
-  selectedCharacter: null,
-  selectedCharacterEpisodes: [],
-  characterDetailsLoading: false,
-  characterDetailsError: null,
-});
 
 export const charactersReducer = createReducer(
   initialState,
@@ -83,13 +54,21 @@ export const charactersReducer = createReducer(
     characterDetailsError: null,
   })),
 
-  on(CharactersActions.loadCharacterDetailsSuccess, (state, { character, episodes }) => ({
-    ...state,
-    selectedCharacter: character,
-    selectedCharacterEpisodes: episodes,
-    characterDetailsLoading: false,
-    characterDetailsError: null,
-  })),
+  on(CharactersActions.loadCharacterDetailsSuccess, (state, { character, episodes }) => {
+    const newEpisodesCache = { ...state.episodesCache };
+    episodes.forEach((episode) => {
+      newEpisodesCache[episode.id] = episode;
+    });
+
+    return {
+      ...state,
+      selectedCharacter: character,
+      selectedCharacterEpisodes: episodes,
+      episodesCache: newEpisodesCache,
+      characterDetailsLoading: false,
+      characterDetailsError: null,
+    };
+  }),
 
   on(CharactersActions.loadCharacterDetailsFailure, (state, { error }) => ({
     ...state,
@@ -103,5 +82,22 @@ export const charactersReducer = createReducer(
     selectedCharacterEpisodes: [],
     characterDetailsLoading: false,
     characterDetailsError: null,
+  })),
+
+  on(CharactersActions.loadEpisodesSuccess, (state, { episodes }) => {
+    const newEpisodesCache = { ...state.episodesCache };
+    episodes.forEach((episode) => {
+      newEpisodesCache[episode.id] = episode;
+    });
+
+    return {
+      ...state,
+      episodesCache: newEpisodesCache,
+    };
+  }),
+
+  on(CharactersActions.loadEpisodesFailure, (state, { error }) => ({
+    ...state,
+    characterDetailsError: error,
   })),
 );

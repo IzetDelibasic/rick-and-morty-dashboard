@@ -41,6 +41,24 @@ export const loadCharacterDetailsFailure = createAction(
   props<{ error: any }>(),
 );
 
-export const clearCharacterDetails = createAction(
-  '[Characters] Clear Character Details'
+export const clearCharacterDetails = createAction('[Characters] Clear Character Details');
+
+export const loadEpisodes = createAction(
+  '[Characters] Load Episodes',
+  props<{ episodeIds: number[] }>(),
+);
+
+export const loadEpisodesSuccess = createAction(
+  '[Characters] Load Episodes Success',
+  props<{ episodes: Episode[] }>(),
+);
+
+export const loadEpisodesFailure = createAction(
+  '[Characters] Load Episodes Failure',
+  props<{ error: any }>(),
+);
+
+export const preloadEpisodes = createAction(
+  '[Characters] Preload Episodes',
+  props<{ episodeIds: number[] }>(),
 );

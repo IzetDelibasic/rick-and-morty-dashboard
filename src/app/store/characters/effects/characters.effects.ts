@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { of, forkJoin } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 import { RickMortyApiService } from '../../../shared/services/rick-morty-api.service';
+import { Episode } from '../../../shared/models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 import { selectCharactersState } from '../selectors/characters.selectors';
 
@@ -45,20 +46,39 @@ export class CharactersEffects {
   loadCharacterDetails$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CharactersActions.loadCharacterDetails),
-      switchMap(({ id }) =>
+      withLatestFrom(this.store.select(selectCharactersState)),
+      switchMap(([{ id }, state]) =>
         this.apiService.getCharacter(id).pipe(
           switchMap((character) => {
-            const episodeIds = character.episode.map((url) => {
-              const parts = url.split('/');
-              return parseInt(parts[parts.length - 1]);
-            });
+            const { episodeIds, cachedEpisodes, missingEpisodeIds } = this.splitEpisodesByCache(
+              character.episode,
+              state.episodesCache,
+            );
 
-            return this.apiService.getEpisodes(episodeIds).pipe(
-              map((episodes) => {
-                const episodeArray = Array.isArray(episodes) ? episodes : [episodes];
+            if (missingEpisodeIds.length === 0) {
+              const sortedEpisodes = episodeIds
+                .map((id) => cachedEpisodes.find((ep) => ep.id === id))
+                .filter((ep) => ep !== undefined) as Episode[];
+
+              return of(
+                CharactersActions.loadCharacterDetailsSuccess({
+                  character,
+                  episodes: sortedEpisodes,
+                }),
+              );
+            }
+
+            return this.apiService.getEpisodes(missingEpisodeIds).pipe(
+              map((newEpisodes) => {
+                const newEpisodeArray = Array.isArray(newEpisodes) ? newEpisodes : [newEpisodes];
+                const allEpisodes = [...cachedEpisodes, ...newEpisodeArray];
+                const sortedEpisodes = episodeIds
+                  .map((id) => allEpisodes.find((ep) => ep.id === id))
+                  .filter((ep) => ep !== undefined) as Episode[];
+
                 return CharactersActions.loadCharacterDetailsSuccess({
                   character,
-                  episodes: episodeArray,
+                  episodes: sortedEpisodes,
                 });
               }),
             );
@@ -68,4 +88,53 @@ export class CharactersEffects {
       ),
     ),
   );
+
+  preloadEpisodes$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CharactersActions.preloadEpisodes),
+      map(({ episodeIds }) => CharactersActions.loadEpisodes({ episodeIds })),
+    ),
+  );
+
+  loadEpisodes$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CharactersActions.loadEpisodes),
+      withLatestFrom(this.store.select(selectCharactersState)),
+      switchMap(([{ episodeIds }, state]) => {
+        const missingEpisodeIds = episodeIds.filter((id) => !state.episodesCache[id]);
+
+        if (missingEpisodeIds.length === 0) {
+          return of(CharactersActions.loadEpisodesSuccess({ episodes: [] }));
+        }
+
+        return this.apiService.getEpisodes(missingEpisodeIds).pipe(
+          map((episodes) => {
+            const episodeArray = Array.isArray(episodes) ? episodes : [episodes];
+            return CharactersActions.loadEpisodesSuccess({ episodes: episodeArray });
+          }),
+          catchError((error) => of(CharactersActions.loadEpisodesFailure({ error }))),
+        );
+      }),
+    ),
+  );
+
+  private splitEpisodesByCache(episodeUrls: string[], episodesCache: { [id: number]: Episode }) {
+    const episodeIds = episodeUrls.map((url) => {
+      const parts = url.split('/');
+      return parseInt(parts[parts.length - 1]);
+    });
+
+    const cachedEpisodes: Episode[] = [];
+    const missingEpisodeIds: number[] = [];
+
+    episodeIds.forEach((episodeId) => {
+      if (episodesCache[episodeId]) {
+        cachedEpisodes.push(episodesCache[episodeId]);
+      } else {
+        missingEpisodeIds.push(episodeId);
+      }
+    });
+
+    return { episodeIds, cachedEpisodes, missingEpisodeIds };
+  }
 }

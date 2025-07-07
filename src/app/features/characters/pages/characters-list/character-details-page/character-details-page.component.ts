@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
@@ -118,5 +118,15 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
 
   calculateAppearancePercentage(episodes: Episode[], totalEpisodes: number = 51): number {
     return Math.round((episodes.length / totalEpisodes) * 100);
+  }
+
+  preloadEpisodes(episodeIds: number[]): void {
+    this.store.dispatch(CharactersActions.preloadEpisodes({ episodeIds }));
+  }
+
+  areEpisodesLoaded(episodeIds: number[]): Observable<boolean> {
+    return this.store
+      .select(CharactersSelectors.selectEpisodesCache)
+      .pipe(map((cache) => episodeIds.every((id) => !!cache[id])));
   }
 }

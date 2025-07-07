@@ -1,4 +1,4 @@
-import { CharactersState } from './characters/reducers/characters.reducer';
+import { CharactersState } from './characters/states/characters.state';
 
 export interface AppState {
   characters: CharactersState;
