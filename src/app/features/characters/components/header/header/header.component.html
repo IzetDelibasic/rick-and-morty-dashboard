@@ -1,6 +1,24 @@
 <header class="app-header">
-  <div class="app-header__title">Rick and Morty Characters Dashboard</div>
-  <nav class="app-header__nav">
-    <a routerLink="/characters" routerLinkActive="active">Characters</a>
-  </nav>
+  <div class="app-header__container">
+    <div class="app-header__brand">
+      <div class="app-header__logo">
+        <img [src]="avatarImage" alt="Rick & Morty Avatar" class="app-header__logo-image" />
+      </div>
+      <div class="app-header__text">
+        <span class="app-header__title">Rick & Morty</span>
+        <span class="app-header__subtitle">Character Explorer</span>
+      </div>
+    </div>
+
+    <nav class="app-header__nav">
+      <rm-button
+        type="button"
+        label="Characters"
+        icon="pi pi-users"
+        severity="success"
+        class="rm-success"
+      >
+      </rm-button>
+    </nav>
+  </div>
 </header>

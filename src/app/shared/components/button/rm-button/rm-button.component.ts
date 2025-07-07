@@ -17,6 +17,7 @@ export class RmButtonComponent {
   @Input() size?: 'small' | 'large';
   @Input() severity?: 'secondary' | 'success' | 'info' | 'warn' | 'help' | 'danger' | 'contrast';
   @Input() variant?: 'outlined' | 'text';
+  @Input() customClass: string = '';
 
   @Output() click = new EventEmitter<void>();
 

@@ -1,0 +1,14 @@
+<div class="character-pagination">
+  <p-paginator
+    [first]="first"
+    [rows]="rowsPerPage"
+    [totalRecords]="totalRecords"
+    [showCurrentPageReport]="true"
+    [showPageLinks]="true"
+    [showFirstLastIcon]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} characters"
+    (onPageChange)="onPageChange($event)"
+    [class.disabled]="loading"
+  >
+  </p-paginator>
+</div>

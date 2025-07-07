@@ -1,0 +1,31 @@
+@import '../../../../../shared/scss/colors.scss';
+@import '../../../../../shared/scss/shared.scss';
+
+.characters-list-page {
+  @include flex($direction: column);
+
+  .characters-list-page__header {
+    background-color: $rm-green-600;
+    @include padding($top: 2rem, $right: 0.5rem, $bottom: 2rem, $left: 0.5rem);
+    text-align: center;
+    .characters-list-page__header-title {
+      @include text-style($size: 2.5rem, $weight: bold);
+      @include margin($bottom: 0.5rem);
+    }
+    .characters-list-page__header-subtitle {
+      @include text-style($size: 1.5rem, $color: $rm-gray-800);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .characters-list-page__header {
+    text-align: center;
+    .characters-list-page__header-title {
+      font-size: 1.5rem !important;
+    }
+    .characters-list-page__header-subtitle {
+      font-size: 1.2rem !important;
+    }
+  }
+}

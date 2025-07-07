@@ -1,0 +1,12 @@
+@import '../../../../shared/scss/shared.scss';
+
+.character-pagination {
+  @include flex($justify: center);
+  @include padding($top: 1rem, $bottom: 1rem);
+}
+
+@media (max-width: 768px) {
+  .character-pagination {
+    @include margin($top: 1rem, $right: 1rem, $bottom: 1rem, $left: 1rem);
+  }
+}

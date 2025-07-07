@@ -1,19 +1,60 @@
+@import '../../../../../shared/scss/colors.scss';
+@import '../../../../../shared/scss/shared.scss';
+
 .app-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  background: #181c24;
-  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, $rm-green-700 0%, $rm-green-900 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  .app-header__container {
+    width: 100%;
+    @include flex($justify: space-between, $align: center);
+    @include padding($top: 1rem, $right: 2rem, $bottom: 1rem, $left: 2rem);
+
+    .app-header__brand {
+      gap: 1rem;
+      @include flex($align: center);
+      .app-header__logo {
+        background: $rm-green-200;
+        @include circle(4rem);
+
+        .app-header__logo-image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .app-header__text {
+        @include flex($direction: column);
+        .app-header__title {
+          @include text-style($size: 1.5rem, $weight: bold);
+        }
+        .app-header__subtitle {
+          @include text-style($size: 1rem);
+        }
+      }
+    }
+
+    .app-header__nav {
+      ::ng-deep .rm-success .p-button {
+        border: 0 !important;
+        background-color: $rm-green-500 !important;
+        transition: background 0.2s ease-in-out;
+        @include padding($top: 0.5rem, $right: 1rem, $bottom: 0.5rem, $left: 1rem);
+
+        &:hover,
+        &:focus {
+          background-color: $rm-green-600 !important;
+        }
+      }
+    }
+  }
 }
 
-.app-header__nav a {
-  color: #fff;
-  cursor: pointer;
-}
-
-.app-header__nav a.active,
-.app-header__nav a:hover {
-  background: #23283a;
-  color: #00e676;
+@media (max-width: 480px) {
+  .app-header__container {
+    padding: 1rem !important;
+  }
 }

@@ -1,1 +1,33 @@
-<p>characters-list-page works!</p>
+<div class="characters-list-page">
+  <div class="characters-list-page__header">
+    <div class="characters-list-page__container">
+      <h1 class="characters-list-page__header-title">Rick & Morty Characters</h1>
+      <p class="characters-list-page__header-subtitle">
+        Explore the multiverse of characters from the Rick and Morty universe
+      </p>
+    </div>
+  </div>
+
+  <div class="characters-list-page__content">
+    <app-characters-grid
+      [characters]="(characters$ | async) || []"
+      [loading]="(loading$ | async) || false"
+      [error]="error$ | async"
+    >
+    </app-characters-grid>
+
+    <div
+      class="characters-list-page__pagination"
+      *ngIf="(totalCount$ | async) && (totalCount$ | async)! > 0"
+    >
+      <app-character-pagination
+        [currentPage]="(currentPage$ | async) || 1"
+        [totalRecords]="(totalCount$ | async) || 0"
+        [rowsPerPage]="20"
+        [loading]="(loading$ | async) || false"
+        (pageChange)="onPageChange($event)"
+      >
+      </app-character-pagination>
+    </div>
+  </div>
+</div>

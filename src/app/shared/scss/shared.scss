@@ -1,0 +1,31 @@
+@mixin text-style($color: null, $size: null, $weight: null) {
+  color: $color;
+  font-size: $size;
+  font-weight: $weight;
+}
+
+@mixin flex($justify: null, $align: null, $direction: null) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $direction;
+}
+
+@mixin margin($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  margin: $top $right $bottom $left;
+}
+
+@mixin padding($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  padding: $top $right $bottom $left;
+}
+
+@mixin circle($size) {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+}
+
+@mixin background-style($bg-color: null, $color: null) {
+  background-color: $bg-color;
+  color: $color;
+}

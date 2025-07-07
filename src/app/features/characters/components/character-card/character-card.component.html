@@ -1,0 +1,53 @@
+<div class="character-card">
+  <div class="character-card__image-container">
+    <img [src]="character.image" [alt]="character.name" class="character-card__image" />
+  </div>
+
+  <div class="character-card__details">
+    <h3 class="character-card__name">
+      {{ character.name }}
+    </h3>
+
+    <div class="character-card__detail-row">
+      <span class="character-card__detail-label">Status</span>
+      <div class="character-card__detail-value">
+        <span
+          class="character-card__status-tag character-card__status-tag--{{
+            getStatusSeverity() | lowercase
+          }}"
+        >
+          <i [class]="getStatusIcon()" class="character-card__status-icon"></i>
+          {{ character.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="character-card__detail-row">
+      <span class="character-card__detail-label">Gender</span>
+      <div class="character-card__detail-value">
+        <span class="character-card__gender">
+          <i [class]="getGenderIcon()" class="character-card__gender-icon"></i>
+          {{ character.gender }}
+        </span>
+      </div>
+    </div>
+
+    <div class="character-card__detail-row">
+      <span class="character-card__detail-label">Species</span>
+      <span class="character-card__detail-value" [title]="character.species">
+        {{ character.species }}
+      </span>
+    </div>
+  </div>
+
+  <div class="character-card__actions">
+    <rm-button
+      type="button"
+      class="character-card__btn"
+      icon="pi pi-eye"
+      label="View Details"
+      severity="secondary"
+    >
+    </rm-button>
+  </div>
+</div>
