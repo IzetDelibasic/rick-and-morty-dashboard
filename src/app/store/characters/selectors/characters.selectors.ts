@@ -6,6 +6,17 @@ export const selectCharactersState = createFeatureSelector<CharactersState>('cha
 
 const { selectEntities } = adapter.getSelectors();
 
+export const selectCurrentPage = createSelector(
+  selectCharactersState,
+  (state) => state.currentPage,
+);
+
+export const selectTotalCount = createSelector(selectCharactersState, (state) => state.totalCount);
+
+export const selectLoading = createSelector(selectCharactersState, (state) => state.loading);
+
+export const selectError = createSelector(selectCharactersState, (state) => state.error);
+
 export const selectCurrentPageCharacters = createSelector(selectCharactersState, (state) => {
   const pageIds = state.pagesCache[state.currentPage];
   if (!pageIds) {
@@ -17,13 +28,22 @@ export const selectCurrentPageCharacters = createSelector(selectCharactersState,
     .filter((character): character is Character => !!character);
 });
 
-export const selectCurrentPage = createSelector(
+export const selectSelectedCharacter = createSelector(
   selectCharactersState,
-  (state) => state.currentPage,
+  (state) => state.selectedCharacter,
 );
 
-export const selectTotalCount = createSelector(selectCharactersState, (state) => state.totalCount);
+export const selectSelectedCharacterEpisodes = createSelector(
+  selectCharactersState,
+  (state) => state.selectedCharacterEpisodes,
+);
 
-export const selectLoading = createSelector(selectCharactersState, (state) => state.loading);
+export const selectCharacterDetailsLoading = createSelector(
+  selectCharactersState,
+  (state) => state.characterDetailsLoading,
+);
 
-export const selectError = createSelector(selectCharactersState, (state) => state.error);
+export const selectCharacterDetailsError = createSelector(
+  selectCharactersState,
+  (state) => state.characterDetailsError,
+);

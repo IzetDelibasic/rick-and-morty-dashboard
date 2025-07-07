@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CHARACTER_CARD_LABELS } from '../../../../constants/contentConstants/characterCardLabels';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +17,8 @@ import { RmButtonComponent } from '../../../../shared/components/button/rm-butto
 export class CharacterCardComponent {
   @Input() character!: Character;
   @Output() characterClick = new EventEmitter<Character>();
+
+  labels = CHARACTER_CARD_LABELS;
 
   getStatusSeverity(): 'success' | 'danger' | 'secondary' {
     switch (this.character.status) {
@@ -48,5 +51,9 @@ export class CharacterCardComponent {
       default:
         return 'pi pi-question';
     }
+  }
+
+  onViewDetails(): void {
+    this.characterClick.emit(this.character);
   }
 }

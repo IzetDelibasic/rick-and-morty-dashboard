@@ -1,6 +1,6 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Character } from '../../../shared/models/character.model';
+import { Character, Episode } from '../../../shared/models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 
 export interface CharactersState extends EntityState<Character> {
@@ -12,6 +12,10 @@ export interface CharactersState extends EntityState<Character> {
   loading: boolean;
   error: any;
   pagesCache: { [page: number]: number[] };
+  selectedCharacter: Character | null;
+  selectedCharacterEpisodes: Episode[];
+  characterDetailsLoading: boolean;
+  characterDetailsError: any;
 }
 
 export const adapter: EntityAdapter<Character> = createEntityAdapter<Character>();
@@ -25,6 +29,10 @@ export const initialState: CharactersState = adapter.getInitialState({
   loading: false,
   error: null,
   pagesCache: {},
+  selectedCharacter: null,
+  selectedCharacterEpisodes: [],
+  characterDetailsLoading: false,
+  characterDetailsError: null,
 });
 
 export const charactersReducer = createReducer(
@@ -67,5 +75,33 @@ export const charactersReducer = createReducer(
   on(CharactersActions.setCurrentPageFromCache, (state, { page }) => ({
     ...state,
     currentPage: page,
+  })),
+
+  on(CharactersActions.loadCharacterDetails, (state) => ({
+    ...state,
+    characterDetailsLoading: true,
+    characterDetailsError: null,
+  })),
+
+  on(CharactersActions.loadCharacterDetailsSuccess, (state, { character, episodes }) => ({
+    ...state,
+    selectedCharacter: character,
+    selectedCharacterEpisodes: episodes,
+    characterDetailsLoading: false,
+    characterDetailsError: null,
+  })),
+
+  on(CharactersActions.loadCharacterDetailsFailure, (state, { error }) => ({
+    ...state,
+    characterDetailsLoading: false,
+    characterDetailsError: error,
+  })),
+
+  on(CharactersActions.clearCharacterDetails, (state) => ({
+    ...state,
+    selectedCharacter: null,
+    selectedCharacterEpisodes: [],
+    characterDetailsLoading: false,
+    characterDetailsError: null,
   })),
 );

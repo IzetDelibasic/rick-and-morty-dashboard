@@ -13,6 +13,7 @@
       [characters]="(characters$ | async) || []"
       [loading]="(loading$ | async) || false"
       [error]="error$ | async"
+      (characterClick)="onCharacterClick($event)"
     >
     </app-characters-grid>
 

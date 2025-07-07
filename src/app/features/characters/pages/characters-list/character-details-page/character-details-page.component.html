@@ -1,0 +1,108 @@
+<div class="character-details-page">
+  <div class="character-details-page__content">
+    <div *ngIf="loading$ | async" class="character-details-page__loading">
+      <p-progressSpinner></p-progressSpinner>
+      <p>{{ labels.loading }}</p>
+    </div>
+
+    <div *ngIf="error$ | async as error" class="character-details-page__error">
+      <p-message severity="error" [text]="labels.failedToLoad + error.message"></p-message>
+    </div>
+
+    <div *ngIf="character$ | async as character" class="character-details-page__details">
+      <div class="character-details-page__container">
+        <div class="character-details-page__main">
+          <p-card class="character-details-page__info-card">
+            <div class="character-info">
+              <div class="character-info__image-container">
+                <img [src]="character.image" [alt]="character.name" class="character-info__image" />
+                <div class="character-info__appearance-badge" *ngIf="episodes$ | async as episodes">
+                  <span>{{ calculateAppearancePercentage(episodes) }}%</span>
+                  <small>{{ labels.appearance }}</small>
+                </div>
+              </div>
+
+              <div class="character-info__details">
+                <h1 class="character-info__name">{{ character.name }}</h1>
+
+                <div class="character-info__attributes">
+                  <div class="character-attribute">
+                    <i [class]="getStatusIcon(character.status)"></i>
+                    <span class="character-attribute__label">{{ labels.status }}</span>
+                    <p-tag
+                      [value]="character.status"
+                      [severity]="getStatusSeverity(character.status)"
+                    >
+                    </p-tag>
+                  </div>
+
+                  <div class="character-attribute">
+                    <i [class]="getGenderIcon(character.gender)"></i>
+                    <span class="character-attribute__label">{{ labels.gender }}</span>
+                    <span class="character-attribute__value">{{ character.gender }}</span>
+                  </div>
+
+                  <div class="character-attribute">
+                    <i class="pi pi-globe"></i>
+                    <span class="character-attribute__label">{{ labels.species }}</span>
+                    <span class="character-attribute__value">{{ character.species }}</span>
+                  </div>
+
+                  <div class="character-attribute" *ngIf="character.type">
+                    <i class="pi pi-tag"></i>
+                    <span class="character-attribute__label">{{ labels.type }}</span>
+                    <span class="character-attribute__value">{{ character.type }}</span>
+                  </div>
+
+                  <div class="character-attribute">
+                    <i class="pi pi-map-marker"></i>
+                    <span class="character-attribute__label">{{ labels.origin }}</span>
+                    <span class="character-attribute__value">{{ character.origin.name }}</span>
+                  </div>
+
+                  <div class="character-attribute">
+                    <i class="pi pi-home"></i>
+                    <span class="character-attribute__label">{{ labels.currentLocation }}</span>
+                    <span class="character-attribute__value">{{ character.location.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-card>
+
+          <p-card
+            class="character-details-page__episodes-card"
+            *ngIf="episodes$ | async as episodes"
+          >
+            <ng-template pTemplate="header">
+              <div class="episodes-header">
+                <span class="episodes-header__total">{{ labels.episodes }} ({{ episodes.length }})</span>
+                <p-tag
+                  [value]="calculateAppearancePercentage(episodes) + '% ' + labels.ofAllEpisodes"
+                  severity="success"
+                >
+                </p-tag>
+              </div>
+            </ng-template>
+
+            <div class="episodes-grid">
+              <div *ngFor="let episode of episodes" class="episode-card">
+                <div class="episode-card__header">
+                  <h3 class="episode-card__name">{{ episode.name }}</h3>
+                  <span class="episode-card__code">{{ episode.episode }}</span>
+                </div>
+                <div class="episode-card__meta">
+                  <span class="episode-card__season">{{ formatEpisodeCode(episode.episode) }}</span>
+                  <span class="episode-card__air-date">
+                    <i class="pi pi-calendar "></i>
+                    {{ formatAirDate(episode.air_date) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

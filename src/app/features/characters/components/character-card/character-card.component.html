@@ -9,7 +9,7 @@
     </h3>
 
     <div class="character-card__detail-row">
-      <span class="character-card__detail-label">Status</span>
+      <span class="character-card__detail-label">{{ labels.status }}</span>
       <div class="character-card__detail-value">
         <span
           class="character-card__status-tag character-card__status-tag--{{
@@ -23,7 +23,7 @@
     </div>
 
     <div class="character-card__detail-row">
-      <span class="character-card__detail-label">Gender</span>
+      <span class="character-card__detail-label">{{ labels.gender }}</span>
       <div class="character-card__detail-value">
         <span class="character-card__gender">
           <i [class]="getGenderIcon()" class="character-card__gender-icon"></i>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="character-card__detail-row">
-      <span class="character-card__detail-label">Species</span>
+      <span class="character-card__detail-label">{{ labels.species }}</span>
       <span class="character-card__detail-value" [title]="character.species">
         {{ character.species }}
       </span>
@@ -45,8 +45,9 @@
       type="button"
       class="character-card__btn"
       icon="pi pi-eye"
-      label="View Details"
+      [label]="labels.viewDetails"
       severity="secondary"
+      (click)="onViewDetails()"
     >
     </rm-button>
   </div>

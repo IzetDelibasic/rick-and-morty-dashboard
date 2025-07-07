@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AVATAR_IMAGE } from '../../../../../constants/contentConstants/imageConstant';
 import { RmButtonComponent } from '../../../../../shared/components/button/rm-button/rm-button.component';
@@ -14,4 +14,10 @@ import { RmButtonComponent } from '../../../../../shared/components/button/rm-bu
 })
 export class RmHeaderComponent {
   avatarImage = AVATAR_IMAGE;
+
+  constructor(private router: Router) {}
+
+  onCharactersClick(): void {
+    this.router.navigate(['/characters']);
+  }
 }

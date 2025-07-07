@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom, filter } from 'rxjs/operators';
 import { RickMortyApiService } from '../../../shared/services/rick-morty-api.service';
 import * as CharactersActions from '../actions/characters.actions';
@@ -39,6 +39,33 @@ export class CharactersEffects {
         }
         return CharactersActions.loadCharacters({ page });
       }),
+    ),
+  );
+
+  loadCharacterDetails$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CharactersActions.loadCharacterDetails),
+      switchMap(({ id }) =>
+        this.apiService.getCharacter(id).pipe(
+          switchMap((character) => {
+            const episodeIds = character.episode.map((url) => {
+              const parts = url.split('/');
+              return parseInt(parts[parts.length - 1]);
+            });
+
+            return this.apiService.getEpisodes(episodeIds).pipe(
+              map((episodes) => {
+                const episodeArray = Array.isArray(episodes) ? episodes : [episodes];
+                return CharactersActions.loadCharacterDetailsSuccess({
+                  character,
+                  episodes: episodeArray,
+                });
+              }),
+            );
+          }),
+          catchError((error) => of(CharactersActions.loadCharacterDetailsFailure({ error }))),
+        ),
+      ),
     ),
   );
 }
