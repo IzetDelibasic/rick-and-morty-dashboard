@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CharacterResponse, Character, Episode } from '../models/character.model';
+import { map } from 'rxjs/operators';
+import { CharacterResponse, Character, Episode, Location } from '../models/character.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,6 +17,19 @@ export class RickMortyApiService {
 
   getCharacter(id: number): Observable<Character> {
     return this.http.get<Character>(`${environment.apiBaseUrl}/character/${id}`);
+  }
+
+  getMultipleCharacters(ids: number[]): Observable<Character[]> {
+    if (ids.length === 1) {
+      return this.http.get<Character>(`${environment.apiBaseUrl}/character/${ids[0]}`).pipe(
+        map((character: Character) => [character])
+      );
+    }
+    return this.http.get<Character[]>(`${environment.apiBaseUrl}/character/${ids.join(',')}`);
+  }
+
+  getLocation(id: number): Observable<Location> {
+    return this.http.get<Location>(`${environment.apiBaseUrl}/location/${id}`);
   }
 
   getEpisodes(ids: number[]): Observable<Episode[]> {

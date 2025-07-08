@@ -45,6 +45,160 @@
       @include padding($top: 1.5rem, $right: 1.5rem, $bottom: 1.5rem, $left: 1.5rem);
     }
   }
+
+  .character-details-page__location-card {
+    border-radius: 1.5rem;
+
+    ::ng-deep .p-card-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      @include padding($top: 1.5rem, $right: 1.5rem, $bottom: 1.5rem, $left: 1.5rem);
+    }
+  }
+
+  .location-header {
+    @include flex($align: center);
+
+    .location-header__title {
+      @include text-style($size: 1.5rem, $color: $white-color, $weight: 600);
+    }
+  }
+
+  .location-loading {
+    @include flex($justify: center, $align: center, $direction: column);
+    gap: 1rem;
+
+    .location-loading__text {
+      font-size: 1.5rem;
+      opacity: 0.8;
+    }
+  }
+
+  .location-error {
+    @include margin($top: 1rem);
+  }
+
+  .location-attribute {
+    @include flex($align: center);
+    @include padding($top: 1rem, $right: 1rem, $bottom: 1rem, $left: 1rem);
+    @include margin($bottom: 1rem);
+    background-color: $rm-gray-900;
+    border-radius: 1rem;
+    border: 1px solid $rm-gray-800;
+
+    i {
+      @include text-style($size: 1rem, $color: $rm-green-500);
+      @include margin($right: 0.5rem);
+    }
+
+    .location-attribute__label {
+      @include text-style($weight: 600, $color: $white-color);
+      min-width: 10rem;
+    }
+
+    .location-attribute__value {
+      @include text-style($color: $rm-gray-300);
+    }
+  }
+
+  .location-residents {
+    .location-residents__title {
+      @include text-style($size: 1rem, $color: $white-color, $weight: 600);
+      @include margin($bottom: 1rem);
+    }
+  }
+
+  .residents-scroll-container {
+    overflow-x: auto;
+    @include padding($bottom: 1rem);
+
+    &::-webkit-scrollbar {
+      height: 0.3rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $rm-green-600;
+
+      &:hover {
+        background: $rm-green-800;
+      }
+    }
+  }
+
+  .residents-list {
+    @include flex;
+    gap: 1rem;
+    min-width: max-content;
+  }
+
+  .resident-card {
+    background-color: $rm-gray-900;
+    border: 1px solid $rm-gray-800;
+    border-radius: 1rem;
+    width: 200px;
+    transition: all 0.3s ease;
+    @include padding($top: 1rem, $right: 1rem, $bottom: 1rem, $left: 1rem);
+
+    &:hover {
+      background-color: $rm-gray-800;
+      border-color: $rm-green-800;
+    }
+
+    .resident-card__image-container {
+      @include margin($bottom: 1rem);
+      @include flex($align: center, $justify: center);
+    }
+
+    .resident-card__image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $rm-green-600;
+    }
+
+    .resident-card__info {
+      text-align: center;
+    }
+
+    .resident-card__name {
+      @include text-style($size: 1rem, $color: $white-color, $weight: 600);
+      @include margin($bottom: 0.8rem);
+    }
+
+    .resident-card__details {
+      @include flex($direction: column);
+      gap: 0.5rem;
+    }
+
+    .resident-card__gender {
+      @include flex($align: center, $justify: center);
+      @include text-style($size: 0.9rem, $color: $rm-gray-300);
+      gap: 0.3rem;
+
+      i {
+        color: $rm-green-500;
+      }
+    }
+
+    .resident-card__status {
+      @include flex($align: center, $justify: center);
+      @include text-style($size: 0.9rem, $weight: 500);
+      gap: 0.5rem;
+    }
+  }
+
+  .residents-more {
+    width: 200px;
+    background-color: $rm-gray-800;
+    border: 2px dashed $rm-gray-600;
+    border-radius: 1rem;
+    @include flex($align: center, $justify: center);
+    @include padding($top: 2rem, $right: 1rem, $bottom: 2rem, $left: 1rem);
+
+    .residents-more__text {
+      @include text-style($size: 1rem, $color: $rm-gray-400);
+    }
+  }
 }
 
 .character-info {
@@ -125,12 +279,12 @@
   @include padding($top: 0.5rem, $right: 0.5rem, $bottom: 0.5rem, $left: 0.5rem);
 
   &::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 0.3rem;
   }
 
   &::-webkit-scrollbar-thumb {
     background: $rm-green-600;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
 
     &:hover {
       background: $rm-green-800;
@@ -204,5 +358,16 @@
   .episodes-grid {
     grid-template-columns: 1fr;
     max-height: 300px;
+  }
+
+  .location-attribute {
+    .location-attribute__label {
+      min-width: 8rem;
+    }
+  }
+
+  .resident-card,
+  .residents-more {
+    width: 160px;
   }
 }

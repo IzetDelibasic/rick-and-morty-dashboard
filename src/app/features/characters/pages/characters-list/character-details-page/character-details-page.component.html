@@ -1,9 +1,11 @@
 <div class="character-details-page">
   <div class="character-details-page__content">
-    <div *ngIf="loading$ | async" class="character-details-page__loading">
-      <p-progressSpinner></p-progressSpinner>
-      <p>{{ labels.loading }}</p>
-    </div>
+    @if (loading$ | async) {
+      <div class="character-details-page__loading">
+        <p-progressSpinner></p-progressSpinner>
+        <p>{{ labels.loading }}</p>
+      </div>
+    }
 
     <div *ngIf="error$ | async as error" class="character-details-page__error">
       <p-message severity="error" [text]="labels.failedToLoad + error.message"></p-message>
@@ -47,12 +49,13 @@
                     <span class="character-attribute__label">{{ labels.species }}</span>
                     <span class="character-attribute__value">{{ character.species }}</span>
                   </div>
-
-                  <div class="character-attribute" *ngIf="character.type">
-                    <i class="pi pi-tag"></i>
-                    <span class="character-attribute__label">{{ labels.type }}</span>
-                    <span class="character-attribute__value">{{ character.type }}</span>
-                  </div>
+                  @if (character.type) {
+                    <div class="character-attribute">
+                      <i class="pi pi-tag"></i>
+                      <span class="character-attribute__label">{{ labels.type }}</span>
+                      <span class="character-attribute__value">{{ character.type }}</span>
+                    </div>
+                  }
 
                   <div class="character-attribute">
                     <i class="pi pi-map-marker"></i>
@@ -101,6 +104,101 @@
                     <i class="pi pi-calendar"></i>
                     {{ episode.air_date | formatAirDate }}
                   </span>
+                </div>
+              </div>
+            </div>
+          </p-card>
+
+          <p-card class="character-details-page__location-card">
+            <ng-template pTemplate="header">
+              <div class="location-header">
+                <span class="location-header__title">{{ labels.locationDetails }}</span>
+              </div>
+            </ng-template>
+
+            @if (locationLoading$ | async) {
+              <div class="location-loading">
+                <p-progressSpinner></p-progressSpinner>
+                <p class="location-loading__text">{{ labels.locationLoading }}</p>
+              </div>
+            }
+
+            @if (locationError$ | async) {
+              <div class="location-error">
+                <p-message severity="error" [text]="labels.locationFailedToLoad"></p-message>
+              </div>
+            }
+
+            <div *ngIf="location$ | async as location" class="location-details">
+              <div class="location-info">
+                <div class="location-attribute">
+                  <i class="pi pi-home"></i>
+                  <span class="location-attribute__label">{{ labels.locationName }}</span>
+                  <span class="location-attribute__value">{{ location.name }}</span>
+                </div>
+
+                <div class="location-attribute">
+                  <i class="pi pi-tag"></i>
+                  <span class="location-attribute__label">{{ labels.locationType }}</span>
+                  <span class="location-attribute__value">{{ location.type }}</span>
+                </div>
+
+                <div class="location-attribute">
+                  <i class="pi pi-globe"></i>
+                  <span class="location-attribute__label">{{ labels.locationDimension }}</span>
+                  <span class="location-attribute__value">{{ location.dimension }}</span>
+                </div>
+              </div>
+
+              <div class="location-residents" *ngIf="locationResidents$ | async as residents">
+                <h4 class="location-residents__title">
+                  {{ labels.locationResidents }} ({{ residents.length }})
+                </h4>
+
+                <div class="residents-scroll-container">
+                  <div class="residents-list">
+                    <div
+                      *ngFor="let resident of residents | visibleResidents: 5"
+                      class="resident-card"
+                    >
+                      <div class="resident-card__image-container">
+                        <img
+                          [src]="resident.image"
+                          [alt]="resident.name"
+                          class="resident-card__image"
+                        />
+                      </div>
+                      <div class="resident-card__info">
+                        <h5 class="resident-card__name">{{ resident.name }}</h5>
+                        <div class="resident-card__details">
+                          <span class="resident-card__gender">
+                            <i [ngClass]="resident.gender | genderIcon"></i>
+                            {{ resident.gender }}
+                          </span>
+                          <span
+                            class="resident-card__status"
+                            [ngClass]="
+                              'resident-card__status--' +
+                              (resident.status | statusSeverity | lowercase)
+                            "
+                          >
+                            <i
+                              class="resident-card__icon"
+                              [ngClass]="resident.status | statusIcon"
+                            ></i>
+                            {{ resident.status }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    @if ((residents | remainingCount: 5) > 0) {
+                      <div class="residents-more">
+                        <span class="residents-more__text">
+                          +{{ residents | remainingCount: 5 }} {{ labels.moreResidents }}
+                        </span>
+                      </div>
+                    }
+                  </div>
                 </div>
               </div>
             </div>

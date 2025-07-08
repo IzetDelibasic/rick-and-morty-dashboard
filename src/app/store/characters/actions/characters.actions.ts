@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { CharacterResponse, Character, Episode } from '../../../shared/models/character.model';
+import {
+  CharacterResponse,
+  Character,
+  Episode,
+  Location,
+} from '../../../shared/models/character.model';
 
 export const loadCharacters = createAction(
   '[Characters] Load Characters',
@@ -62,3 +67,20 @@ export const preloadEpisodes = createAction(
   '[Characters] Preload Episodes',
   props<{ episodeIds: number[] }>(),
 );
+
+export const loadCharacterLocation = createAction(
+  '[Characters] Load Character Location',
+  props<{ locationUrl: string }>(),
+);
+
+export const loadCharacterLocationSuccess = createAction(
+  '[Characters] Load Character Location Success',
+  props<{ location: Location; residents: Character[] }>(),
+);
+
+export const loadCharacterLocationFailure = createAction(
+  '[Characters] Load Character Location Failure',
+  props<{ error: any }>(),
+);
+
+export const clearCharacterLocation = createAction('[Characters] Clear Character Location');

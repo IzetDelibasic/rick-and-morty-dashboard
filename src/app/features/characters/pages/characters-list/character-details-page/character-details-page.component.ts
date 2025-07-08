@@ -10,7 +10,7 @@ import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
-import { Character, Episode } from '../../../../../shared/models/character.model';
+import { Character, Episode, Location } from '../../../../../shared/models/character.model';
 import * as CharactersActions from '../../../../../store/characters/actions/characters.actions';
 import * as CharactersSelectors from '../../../../../store/characters/selectors/characters.selectors';
 import { GenderIconPipe } from '../../../../../shared/pipes/gender-icon.pipe';
@@ -19,6 +19,8 @@ import { StatusIconPipe } from '../../../../../shared/pipes/status-icon.pipe';
 import { FormatAirDatePipe } from '../../../../../shared/pipes/format-air-date.pipe';
 import { FormatEpisodePipe } from '../../../../../shared/pipes/format-episode.pipe';
 import { AppearancePercentagePipe } from '../../../../../shared/pipes/appearance-percentage.pipe';
+import { VisibleResidentsPipe } from '../../../../../shared/pipes/visible-residents.pipe';
+import { RemainingCountPipe } from '../../../../../shared/pipes/remaining-count.pipe';
 @Component({
   selector: 'app-character-details-page',
   standalone: true,
@@ -35,6 +37,8 @@ import { AppearancePercentagePipe } from '../../../../../shared/pipes/appearance
     FormatAirDatePipe,
     FormatEpisodePipe,
     AppearancePercentagePipe,
+    VisibleResidentsPipe,
+    RemainingCountPipe,
   ],
   templateUrl: './character-details-page.component.html',
   styleUrl: './character-details-page.component.scss',
@@ -44,6 +48,10 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
   episodes$: Observable<Episode[]>;
   loading$: Observable<boolean>;
   error$: Observable<any>;
+  location$: Observable<Location | null>;
+  locationResidents$: Observable<Character[]>;
+  locationLoading$: Observable<boolean>;
+  locationError$: Observable<any>;
 
   labels = CHARACTER_DETAILS_LABELS;
 
@@ -58,6 +66,10 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
     this.episodes$ = this.store.select(CharactersSelectors.selectSelectedCharacterEpisodes);
     this.loading$ = this.store.select(CharactersSelectors.selectCharacterDetailsLoading);
     this.error$ = this.store.select(CharactersSelectors.selectCharacterDetailsError);
+    this.location$ = this.store.select(CharactersSelectors.selectSelectedCharacterLocation);
+    this.locationResidents$ = this.store.select(CharactersSelectors.selectLocationResidents);
+    this.locationLoading$ = this.store.select(CharactersSelectors.selectLocationLoading);
+    this.locationError$ = this.store.select(CharactersSelectors.selectLocationError);
   }
 
   ngOnInit(): void {
@@ -68,12 +80,21 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
         this.store.dispatch(CharactersActions.loadCharacterDetails({ id: this.characterId }));
       }
     });
+
+    this.character$.pipe(takeUntil(this.destroy$)).subscribe((character) => {
+      if (character?.location?.url) {
+        this.store.dispatch(
+          CharactersActions.loadCharacterLocation({ locationUrl: character.location.url }),
+        );
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.store.dispatch(CharactersActions.clearCharacterDetails());
+    this.store.dispatch(CharactersActions.clearCharacterLocation());
   }
 
   preloadEpisodes(episodeIds: number[]): void {

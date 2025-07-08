@@ -1,5 +1,5 @@
 import { EntityState } from '@ngrx/entity';
-import { Character, Episode } from '../../../shared/models/character.model';
+import { Character, Episode, Location } from '../../../shared/models/character.model';
 
 export interface CharactersState extends EntityState<Character> {
   currentPage: number;
@@ -15,6 +15,10 @@ export interface CharactersState extends EntityState<Character> {
   selectedCharacterEpisodes: Episode[];
   characterDetailsLoading: boolean;
   characterDetailsError: any;
+  selectedCharacterLocation: Location | null;
+  locationResidents: Character[];
+  locationLoading: boolean;
+  locationError: any;
 }
 
 export const initialState: CharactersState = {
@@ -33,4 +37,8 @@ export const initialState: CharactersState = {
   selectedCharacterEpisodes: [],
   characterDetailsLoading: false,
   characterDetailsError: null,
+  selectedCharacterLocation: null,
+  locationResidents: [],
+  locationLoading: false,
+  locationError: null,
 };

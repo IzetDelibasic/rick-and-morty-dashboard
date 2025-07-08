@@ -11,4 +11,12 @@ export const CHARACTER_DETAILS_LABELS = {
   loading: 'Loading character details...',
   failedToLoad: 'Failed to load character details: ',
   ofAllEpisodes: 'of all episodes',
+  locationDetails: 'Location Details',
+  locationName: 'Name:',
+  locationType: 'Type:',
+  locationDimension: 'Dimension:',
+  locationResidents: 'Other Residents',
+  moreResidents: 'more',
+  locationLoading: 'Loading location details...',
+  locationFailedToLoad: 'Failed to load location details',
 };

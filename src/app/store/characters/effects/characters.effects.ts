@@ -118,6 +118,42 @@ export class CharactersEffects {
     ),
   );
 
+  loadCharacterLocation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CharactersActions.loadCharacterLocation),
+      switchMap(({ locationUrl }) => {
+        const locationId = this.extractIdFromUrl(locationUrl);
+
+        return this.apiService.getLocation(locationId).pipe(
+          switchMap((location) => {
+            const residentIds = location.residents.map((url) => this.extractIdFromUrl(url));
+
+            if (residentIds.length === 0) {
+              return of(
+                CharactersActions.loadCharacterLocationSuccess({
+                  location,
+                  residents: [],
+                }),
+              );
+            }
+
+            return this.apiService.getMultipleCharacters(residentIds).pipe(
+              map((residents) => {
+                const residentArray = Array.isArray(residents) ? residents : [residents];
+
+                return CharactersActions.loadCharacterLocationSuccess({
+                  location,
+                  residents: residentArray,
+                });
+              }),
+            );
+          }),
+          catchError((error) => of(CharactersActions.loadCharacterLocationFailure({ error }))),
+        );
+      }),
+    ),
+  );
+
   private splitEpisodesByCache(episodeUrls: string[], episodesCache: { [id: number]: Episode }) {
     const episodeIds = episodeUrls.map((url) => {
       const parts = url.split('/');
@@ -136,5 +172,10 @@ export class CharactersEffects {
     });
 
     return { episodeIds, cachedEpisodes, missingEpisodeIds };
+  }
+
+  private extractIdFromUrl(url: string): number {
+    const parts = url.split('/');
+    return parseInt(parts[parts.length - 1]);
   }
 }

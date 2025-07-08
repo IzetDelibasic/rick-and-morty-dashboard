@@ -53,3 +53,23 @@ export const selectEpisodesCache = createSelector(
   selectCharactersState,
   (state) => state.episodesCache,
 );
+
+export const selectSelectedCharacterLocation = createSelector(
+  selectCharactersState,
+  (state) => state.selectedCharacterLocation,
+);
+
+export const selectLocationResidents = createSelector(
+  selectCharactersState,
+  (state) => state.locationResidents,
+);
+
+export const selectLocationLoading = createSelector(
+  selectCharactersState,
+  (state) => state.locationLoading,
+);
+
+export const selectLocationError = createSelector(
+  selectCharactersState,
+  (state) => state.locationError,
+);

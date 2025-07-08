@@ -82,6 +82,10 @@ export const charactersReducer = createReducer(
     selectedCharacterEpisodes: [],
     characterDetailsLoading: false,
     characterDetailsError: null,
+    selectedCharacterLocation: null,
+    locationResidents: [],
+    locationLoading: false,
+    locationError: null,
   })),
 
   on(CharactersActions.loadEpisodesSuccess, (state, { episodes }) => {
@@ -99,5 +103,35 @@ export const charactersReducer = createReducer(
   on(CharactersActions.loadEpisodesFailure, (state, { error }) => ({
     ...state,
     characterDetailsError: error,
+  })),
+
+  on(CharactersActions.loadCharacterLocation, (state) => ({
+    ...state,
+    locationLoading: true,
+    locationError: null,
+    selectedCharacterLocation: null,
+    locationResidents: [],
+  })),
+
+  on(CharactersActions.loadCharacterLocationSuccess, (state, { location, residents }) => ({
+    ...state,
+    selectedCharacterLocation: location,
+    locationResidents: residents,
+    locationLoading: false,
+    locationError: null,
+  })),
+
+  on(CharactersActions.loadCharacterLocationFailure, (state, { error }) => ({
+    ...state,
+    locationLoading: false,
+    locationError: error,
+  })),
+
+  on(CharactersActions.clearCharacterLocation, (state) => ({
+    ...state,
+    selectedCharacterLocation: null,
+    locationResidents: [],
+    locationLoading: false,
+    locationError: null,
   })),
 );
