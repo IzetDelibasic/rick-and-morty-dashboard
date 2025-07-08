@@ -13,10 +13,10 @@
       <div class="character-card__detail-value">
         <span
           class="character-card__status-tag character-card__status-tag--{{
-            getStatusSeverity() | lowercase
+            character.status | statusSeverity | lowercase
           }}"
         >
-          <i [class]="getStatusIcon()" class="character-card__status-icon"></i>
+          <i [ngClass]="character.status | statusIcon" class="character-card__status-icon"></i>
           {{ character.status }}
         </span>
       </div>
@@ -26,7 +26,7 @@
       <span class="character-card__detail-label">{{ labels.gender }}</span>
       <div class="character-card__detail-value">
         <span class="character-card__gender">
-          <i [class]="getGenderIcon()" class="character-card__gender-icon"></i>
+          <i [ngClass]="character.gender | genderIcon" class="character-card__gender-icon"></i>
           {{ character.gender }}
         </span>
       </div>

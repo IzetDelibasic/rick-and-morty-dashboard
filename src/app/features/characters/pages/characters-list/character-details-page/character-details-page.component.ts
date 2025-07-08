@@ -13,7 +13,12 @@ import { CardModule } from 'primeng/card';
 import { Character, Episode } from '../../../../../shared/models/character.model';
 import * as CharactersActions from '../../../../../store/characters/actions/characters.actions';
 import * as CharactersSelectors from '../../../../../store/characters/selectors/characters.selectors';
-
+import { GenderIconPipe } from '../../../../../shared/pipes/gender-icon.pipe';
+import { StatusSeverityPipe } from '../../../../../shared/pipes/status-severity.pipe';
+import { StatusIconPipe } from '../../../../../shared/pipes/status-icon.pipe';
+import { FormatAirDatePipe } from '../../../../../shared/pipes/format-air-date.pipe';
+import { FormatEpisodePipe } from '../../../../../shared/pipes/format-episode.pipe';
+import { AppearancePercentagePipe } from '../../../../../shared/pipes/appearance-percentage.pipe';
 @Component({
   selector: 'app-character-details-page',
   standalone: true,
@@ -24,6 +29,12 @@ import * as CharactersSelectors from '../../../../../store/characters/selectors/
     ButtonModule,
     TagModule,
     CardModule,
+    GenderIconPipe,
+    StatusSeverityPipe,
+    StatusIconPipe,
+    FormatAirDatePipe,
+    FormatEpisodePipe,
+    AppearancePercentagePipe,
   ],
   templateUrl: './character-details-page.component.html',
   styleUrl: './character-details-page.component.scss',
@@ -63,61 +74,6 @@ export class CharacterDetailsPageComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.store.dispatch(CharactersActions.clearCharacterDetails());
-  }
-
-  getStatusSeverity(
-    status: string,
-  ): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined {
-    switch (status.toLowerCase()) {
-      case 'alive':
-        return 'success';
-      case 'dead':
-        return 'danger';
-      default:
-        return 'contrast';
-    }
-  }
-
-  getGenderIcon(gender: string): string {
-    switch (gender.toLowerCase()) {
-      case 'male':
-        return 'pi pi-mars';
-      case 'female':
-        return 'pi pi-venus';
-      default:
-        return 'pi pi-question';
-    }
-  }
-
-  getStatusIcon(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'alive':
-        return 'pi pi-heart';
-      case 'dead':
-        return 'pi pi-times';
-      default:
-        return 'pi pi-question';
-    }
-  }
-
-  formatEpisodeCode(episode: string): string {
-    const match = episode.match(/S(\d+)E(\d+)/);
-    if (match) {
-      return `Season ${parseInt(match[1])} | Episode ${parseInt(match[2])}`;
-    }
-    return episode;
-  }
-
-  formatAirDate(airDate: string): string {
-    try {
-      return new Date(airDate).toLocaleDateString('en-GB').replaceAll('/', '-');
-    } catch {
-      return airDate;
-    }
-  }
-
-  calculateAppearancePercentage(episodes: Episode[], totalEpisodes: number = 51): number {
-    return Math.round((episodes.length / totalEpisodes) * 100);
   }
 
   preloadEpisodes(episodeIds: number[]): void {

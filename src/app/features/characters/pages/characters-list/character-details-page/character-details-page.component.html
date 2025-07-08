@@ -17,7 +17,7 @@
               <div class="character-info__image-container">
                 <img [src]="character.image" [alt]="character.name" class="character-info__image" />
                 <div class="character-info__appearance-badge" *ngIf="episodes$ | async as episodes">
-                  <span>{{ calculateAppearancePercentage(episodes) }}%</span>
+                  <span>{{ episodes | appearancePercentage }}%</span>
                   <small>{{ labels.appearance }}</small>
                 </div>
               </div>
@@ -27,17 +27,17 @@
 
                 <div class="character-info__attributes">
                   <div class="character-attribute">
-                    <i [class]="getStatusIcon(character.status)"></i>
+                    <i [ngClass]="character.status | statusIcon"></i>
                     <span class="character-attribute__label">{{ labels.status }}</span>
                     <p-tag
                       [value]="character.status"
-                      [severity]="getStatusSeverity(character.status)"
+                      [severity]="character.status | statusSeverity"
                     >
                     </p-tag>
                   </div>
 
                   <div class="character-attribute">
-                    <i [class]="getGenderIcon(character.gender)"></i>
+                    <i [ngClass]="character.gender | genderIcon"></i>
                     <span class="character-attribute__label">{{ labels.gender }}</span>
                     <span class="character-attribute__value">{{ character.gender }}</span>
                   </div>
@@ -76,9 +76,11 @@
           >
             <ng-template pTemplate="header">
               <div class="episodes-header">
-                <span class="episodes-header__total">{{ labels.episodes }} ({{ episodes.length }})</span>
+                <span class="episodes-header__total"
+                  >{{ labels.episodes }} ({{ episodes.length }})</span
+                >
                 <p-tag
-                  [value]="calculateAppearancePercentage(episodes) + '% ' + labels.ofAllEpisodes"
+                  [value]="(episodes | appearancePercentage) + '% ' + labels.ofAllEpisodes"
                   severity="success"
                 >
                 </p-tag>
@@ -92,10 +94,12 @@
                   <span class="episode-card__code">{{ episode.episode }}</span>
                 </div>
                 <div class="episode-card__meta">
-                  <span class="episode-card__season">{{ formatEpisodeCode(episode.episode) }}</span>
+                  <span class="episode-card__season">{{
+                    episode.episode | formatEpisodeCode
+                  }}</span>
                   <span class="episode-card__air-date">
-                    <i class="pi pi-calendar "></i>
-                    {{ formatAirDate(episode.air_date) }}
+                    <i class="pi pi-calendar"></i>
+                    {{ episode.air_date | formatAirDate }}
                   </span>
                 </div>
               </div>
